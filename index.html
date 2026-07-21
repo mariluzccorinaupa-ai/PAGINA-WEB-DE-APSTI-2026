@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control - Instituto Tecnológico</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+    <header>
+        <h1>🏛️ Instituto Superior Tecnológico</h1>
+        <p>Módulo de Prácticas de JavaScript (Condicionales y Bucles)</p>
+    </header>
+
+    <main class="container">
+        
+        <section class="card">
+            <h2>1. Control de Admisión y Aulas (Condicionales)</h2>
+            <p>Ingresa la nota del examen para verificar el estado académico del alumno y selecciona el turno para asignarle un aula automáticamente.</p>
+            
+            <div class="form-group">
+                <label for="notaAlumno">Nota del Alumno (0 - 20):</label>
+                <input type="number" id="notaAlumno" min="0" max="20" placeholder="Ej. 14">
+            </div>
+
+            <div class="form-group">
+                <label for="turnoAlumno">Turno de Estudio:</label>
+                <select id="turnoAlumno">
+                    <option value="">-- Selecciona un Turno --</option>
+                    <option value="M">Mañana</option>
+                    <option value="T">Tarde</option>
+                    <option value="N">Noche</option>
+                </select>
+            </div>
+
+            <button onclick="evaluarAlumno()">Evaluar Alumno</button>
+
+            <div id="resultadoCondicionales" class="resultado">
+                Esperando datos...
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>2. Generador de Reportes y Notas (Bucles)</h2>
+            <p>Genera de forma masiva simulaciones de listas de asistencia o registros de notas utilizando iteradores.</p>
+            
+            <div class="form-group">
+                <label for="cantidadAlumnos">Cantidad de Alumnos a procesar:</label>
+                <input type="number" id="cantidadAlumnos" min="1" max="10" placeholder="Ej. 5">
+            </div>
+
+            <div class="btn-group">
+                <button onclick="generarListaFor()" class="btn-secondary">Generar con FOR (Asistencia)</button>
+                <button onclick="generarListaWhile()" class="btn-secondary">Generar con WHILE (Notas Aleatorias)</button>
+            </div>
+
+            <div id="resultadoBucles" class="resultado">
+                No se ha generado ningún reporte.
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Instituto Tecnológico - Área de Computación e Informática</p>
+    </footer>
+
+    <script>
+        // ==========================================
+        // RETO 1: CONDICIONALES (if, else if, else, switch)
+        // ==========================================
+        function evaluarAlumno() {
+            // Capturamos los valores de los inputs
+            const nota = parseFloat(document.getElementById('notaAlumno').value);
+            const turno = document.getElementById('turnoAlumno').value;
+            
+            let mensajeNota = "";
+            let mensajeAula = "";
+
+            // Validación: Si los campos están vacíos, detenemos la ejecución
+            if (isNaN(nota) || turno === "") {
+                alert("Por favor, completa la nota y selecciona un turno.");
+                return;
+            }
+
+            // 1. EJERCICIO CON IF / ELSE IF / ELSE
+            // Clasificamos el rendimiento del alumno según su nota
+            if (nota >= 17) {
+                mensajeNota = `<span class="text-success">Excelente / Opción a Beca (${nota})</span>`;
+            } else if (nota >= 13) {
+                mensajeNota = `<span class="text-success">Aprobado Regular (${nota})</span>`;
+            } else {
+                mensajeNota = `<span class="text-danger">Desaprobado (${nota}) - Requiere Recuperación</span>`;
+            }
+
+            // 2. EJERCICIO CON SWITCH
+            // Evaluamos la variable 'turno' para asignar el aula correspondiente
+            switch(turno) {
+                case 'M':
+                    mensajeAula = "Asignado al Aula 101 (Piso 1 - Turno Mañana)";
+                    break;
+                case 'T':
+                    mensajeAula = "Asignado al Aula 202 (Piso 2 - Turno Tarde)";
+                    break;
+                case 'N':
+                    mensajeAula = "Asignado al Aula 303 (Piso 3 - Turno Noche)";
+                    break;
+                default:
+                    mensajeAula = "Turno no reconocido.";
+            }
+
+            // Inyectamos las respuestas en el contenedor HTML correspondiente
+            document.getElementById('resultadoCondicionales').innerHTML = `
+                <p><strong>Rendimiento académico:</strong> ${mensajeNota}</p>
+                <p><strong>Distribución de Infraestructura:</strong> ${mensajeAula}</p>
+            `;
+        }
+
+        // ==========================================
+        // RETO 2: BUCLES FUNDAMENTALES (for, while)
+        // ==========================================
+        
+        // Generador utilizando el bucle FOR
+        function generarListaFor() {
+            const cantidad = parseInt(document.getElementById('cantidadAlumnos').value);
+            let htmlContenido = "<strong>Lista de Asistencia Generada:</strong><ul>";
+
+            if (isNaN(cantidad) || cantidad <= 0) {
+                alert("Por favor, ingresa una cantidad válida de alumnos.");
+                return;
+            }
+
+            // El bucle FOR se ejecuta un número conocido de veces
+            for (let i = 1; i <= cantidad; i++) {
+                htmlContenido += `<li>✔️ Alumno Código 00${i}: Presente en el Laboratorio de Cómputo.</li>`;
+            }
+            htmlContenido += "</ul>";
+
+            document.getElementById('resultadoBucles').innerHTML = htmlContenido;
+        }
+
+        // Generador utilizando el bucle WHILE
+        function generarListaWhile() {
+            const cantidad = parseInt(document.getElementById('cantidadAlumnos').value);
+            let htmlContenido = "<strong>Simulación de Actas de Notas:</strong><ul>";
+            let contador = 1;
+
+            if (isNaN(cantidad) || cantidad <= 0) {
+                alert("Por favor, ingresa una cantidad válida de alumnos.");
+                return;
+            }
+
+            // El bucle WHILE se ejecuta mientras la condición se mantenga verdadera
+            while (contador <= cantidad) {
+                // Generamos una nota aleatoria entre 0 y 20 para simular datos dinámicos
+                let notaAleatoria = Math.floor(Math.random() * 21);
+                let estadoEstilo = notaAleatoria >= 13 ? 'text-success' : 'text-danger';
+
+                htmlContenido += `<li>📝 Alumno ${contador} -> Nota Simulada: <span class="${estadoEstilo}">${notaAleatoria}</span></li>`;
+                
+                // IMPORTANTE: Incrementamos el contador para evitar un bucle infinito
+                contador++;
+            }
+            htmlContenido += "</ul>";
+
+            document.getElementById('resultadoBucles').innerHTML = htmlContenido;
+        }
+    </script>
+</body>
+</html>
